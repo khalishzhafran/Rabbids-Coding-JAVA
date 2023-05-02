@@ -3,8 +3,8 @@ import Core.Commands.CommandFactory.CommandFactory;
 // import Core.Commands.InteractionCommands.Pickup;
 import Core.Commands.MoveCommands.MoveBackward;
 import Core.Commands.MoveCommands.MoveForward;
-// import Core.Commands.TurnCommands.TurnLeft;
-// import Core.Commands.TurnCommands.TurnRight;
+import Core.Commands.TurnCommands.TurnLeft;
+import Core.Commands.TurnCommands.TurnRight;
 import Core.GameSpace.Level;
 import Core.GameSpace.LevelBuilder;
 import Objects.ControllableObjects.Rabbid;
@@ -21,21 +21,28 @@ public class App {
 
         MoveForward moveForward = (MoveForward) CommandFactory.createCommand(CommandType.MoveForward);
         MoveBackward moveBackward = (MoveBackward) CommandFactory.createCommand(CommandType.MoveBackward);
-        // TurnLeft turnLeft = (TurnLeft)
-        // CommandFactory.createCommand(CommandType.TurnLeft);
-        // TurnRight turnRight = (TurnRight)
-        // CommandFactory.createCommand(CommandType.TurnRight);
+        TurnLeft turnLeft = (TurnLeft) CommandFactory.createCommand(CommandType.TurnLeft);
+        TurnRight turnRight = (TurnRight) CommandFactory.createCommand(CommandType.TurnRight);
         // Pickup pickup = (Pickup) CommandFactory.createCommand(CommandType.Pickup);
 
-        Level level1 = new LevelBuilder().buildLevel(moveForward, moveBackward, null, null, null);
-        // Level level2 = new LevelBuilder().buildLevel(moveForward, moveBackward,
-        // turnLeft, turnRight, null);
+        Level level1 = new LevelBuilder()
+                .setMoveForward(moveForward)
+                .setMoveBackward(moveBackward)
+                .buildLevel();
+        Level level2 = new LevelBuilder()
+                .setMoveForward(moveForward)
+                .setMoveBackward(moveBackward)
+                .setTurnLeft(turnLeft)
+                .setTurnRight(turnRight)
+                .buildLevel();
         // Level level3 = new LevelBuilder().buildLevel(moveForward, moveBackward,
         // turnLeft, turnRight, pickup);
 
         level1.setObjectToGrid(4, 8, rabbid);
+        level2.setObjectToGrid(2, 5, rabbid);
 
-        gameManager.setLevel(level1);
+        gameManager.addLevel(level2);
+        gameManager.addLevel(level1);
         gameManager.startGame();
     }
 }

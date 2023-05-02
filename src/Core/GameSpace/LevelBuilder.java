@@ -13,14 +13,32 @@ public class LevelBuilder {
         level = new Level();
     }
 
-    public Level buildLevel(MoveForward moveForward, MoveBackward moveBackward, TurnLeft turnLeft,
-            TurnRight turnRight,
-            Pickup pickup) {
+    public LevelBuilder setMoveForward(MoveForward moveForward) {
         level.setMoveForward(moveForward);
+        return this;
+    }
+
+    public LevelBuilder setMoveBackward(MoveBackward moveBackward) {
         level.setMoveBackward(moveBackward);
+        return this;
+    }
+
+    public LevelBuilder setTurnLeft(TurnLeft turnLeft) {
         level.setTurnLeft(turnLeft);
+        return this;
+    }
+
+    public LevelBuilder setTurnRight(TurnRight turnRight) {
         level.setTurnRight(turnRight);
+        return this;
+    }
+
+    public LevelBuilder setPickup(Pickup pickup) {
         level.setPickup(pickup);
+        return this;
+    }
+
+    public Level buildLevel() {
         return level;
     }
 }

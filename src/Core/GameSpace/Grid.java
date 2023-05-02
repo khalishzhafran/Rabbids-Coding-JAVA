@@ -1,7 +1,7 @@
 package Core.GameSpace;
 
-import Core.Events.GameEvent;
-import Core.Events.GameEventListener;
+// import Core.Events.GameEvent;
+// import Core.Events.GameEventListener;
 import Objects.Object;
 
 public class Grid {
@@ -26,7 +26,7 @@ public class Grid {
         object.setPosition(x, y);
     }
 
-    public void display() {
+    public void render() {
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
                 if (grid[i][j] == "-") {
@@ -39,7 +39,7 @@ public class Grid {
         }
     }
 
-    private void positionChanged(GameEventListener listener) {
-        System.out.println("Position changed");
-    }
+    // private void positionChanged(GameEventListener listener) {
+    // System.out.println("Position changed");
+    // }
 }

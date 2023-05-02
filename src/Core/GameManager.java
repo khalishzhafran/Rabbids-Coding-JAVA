@@ -1,5 +1,7 @@
 package Core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.io.IOException;
 
@@ -12,7 +14,9 @@ public class GameManager {
 
     private boolean isGameRunning = false;
 
-    private Level level;
+    private List<Level> levelList = new ArrayList<Level>();
+    private int currentLevelIndex;
+
     private Invoker invoker = new Invoker();
 
     public static GameManager getInstance() {
@@ -21,6 +25,7 @@ public class GameManager {
 
     public void startGame() throws InterruptedException {
         isGameRunning = true;
+        currentLevelIndex = 0;
 
         int selectedCommand;
         Scanner scanner = new Scanner(System.in);
@@ -29,13 +34,11 @@ public class GameManager {
 
         while (isGameRunning) {
             System.out.println("\nAvailable Command:");
-            for (int i = 0; i < level.getAvailableCommands().size(); i++) {
-                if (level.getAvailableCommands().get(i) == null)
-                    continue;
-                System.out.println((i + 1) + ". " + level.getAvailableCommands().get(i).getClass().getSimpleName());
-            }
 
-            System.out.println("\n8. Execute Command");
+            getCurrentLevel().displayAvailableCommand();
+
+            System.out.println("\n7. Execute Command");
+            System.out.println("8. Clear Command");
             System.out.println("9. Undo Command");
             System.out.println("0. Exit");
             System.out.print("Choose Command : ");
@@ -44,22 +47,25 @@ public class GameManager {
 
             switch (selectedCommand) {
                 case 1:
-                    invoker.addCommand(level.getMoveForward());
+                    invoker.addCommand(getCurrentLevel().getMoveForward());
                     break;
                 case 2:
-                    invoker.addCommand(level.getMoveBackward());
+                    invoker.addCommand(getCurrentLevel().getMoveBackward());
                     break;
                 case 3:
-                    invoker.addCommand(level.getTurnLeft());
+                    invoker.addCommand(getCurrentLevel().getTurnLeft());
                     break;
                 case 4:
-                    invoker.addCommand(level.getTurnRight());
+                    invoker.addCommand(getCurrentLevel().getTurnRight());
                     break;
                 case 5:
-                    invoker.addCommand(level.getPickup());
+                    invoker.addCommand(getCurrentLevel().getPickup());
                     break;
-                case 8:
+                case 7:
                     invoker.executeCommands();
+                    continue;
+                case 8:
+                    invoker.clearCommands();
                     continue;
                 case 9:
                     invoker.undo();
@@ -73,13 +79,32 @@ public class GameManager {
             }
 
             resetDisplay();
+
+            if (isLevelFinished()) {
+                System.out.println("Level Finished!");
+                Thread.sleep(5000);
+
+                levelUp();
+                invoker.clearCommands();
+                if (currentLevelIndex >= levelList.size()) {
+                    System.out.println("Game Finished!");
+                    Thread.sleep(5000);
+                    isGameRunning = false;
+                } else {
+                    resetDisplay();
+                }
+            }
         }
 
         scanner.close();
     }
 
-    public void setLevel(Level level) {
-        this.level = level;
+    public void addLevel(Level level) {
+        levelList.add(level);
+    }
+
+    private void levelUp() {
+        currentLevelIndex++;
     }
 
     private void printCommandList() {
@@ -90,10 +115,18 @@ public class GameManager {
         }
     }
 
-    private void resetDisplay() {
+    public void resetDisplay() {
         clearConsole();
-        level.displayGrid();
+        getCurrentLevel().displayGrid();
         printCommandList();
+    }
+
+    private Level getCurrentLevel() {
+        return levelList.get(currentLevelIndex);
+    }
+
+    private boolean isLevelFinished() {
+        return getCurrentLevel().isFinished();
     }
 
     private void clearConsole() {

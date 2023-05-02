@@ -22,6 +22,8 @@ public class Level {
 
     private List<ICommand> availableCommands = new ArrayList<ICommand>();
 
+    private int akal = 0;
+
     public Level() {
         grid = new Grid();
     }
@@ -31,7 +33,16 @@ public class Level {
     }
 
     public void displayGrid() {
-        grid.display();
+        grid.render();
+    }
+
+    public void displayAvailableCommand() {
+        for (int i = 0; i < getAvailableCommands().size(); i++) {
+            if (getAvailableCommands().get(i) == null)
+                continue;
+            System.out.println(
+                    (i + 1) + ". " + getAvailableCommands().get(i).getClass().getSimpleName());
+        }
     }
 
     public void setMoveForward(MoveForward moveForward) {
@@ -81,5 +92,15 @@ public class Level {
 
     public List<ICommand> getAvailableCommands() {
         return availableCommands;
+    }
+
+    public boolean isFinished() {
+        akal++;
+
+        if (akal >= 5) {
+            return true;
+        }
+
+        return false;
     }
 }
